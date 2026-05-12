@@ -7,16 +7,16 @@ import time
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# ── PAGE CONFIG ───────────────────────────────────────────────────────────────
+# PAGE CONFIG
 
 st.set_page_config(
 page_title=“MNQ Live Chart”,
-page_icon=“📈”,
+page_icon=””,
 layout=“wide”,
 initial_sidebar_state=“collapsed”
 )
 
-# ── DARK THEME CSS ────────────────────────────────────────────────────────────
+# DARK THEME CSS
 
 st.markdown(”””
 
@@ -42,7 +42,7 @@ h1, h2, h3 { font-family: monospace; color: #e0e0e0; }
 
 “””, unsafe_allow_html=True)
 
-# ── HELPERS ───────────────────────────────────────────────────────────────────
+# HELPERS
 
 def calc_ema(series, period):
 return series.ewm(span=period, adjust=False).mean()
@@ -190,7 +190,7 @@ fig.update_yaxes(gridcolor='#111', showgrid=True, zeroline=False, side='right')
 return fig
 ```
 
-# ── MAIN UI ───────────────────────────────────────────────────────────────────
+# MAIN UI
 
 st.markdown(”””
 
@@ -204,7 +204,7 @@ st.markdown(”””
 </div>
 """, unsafe_allow_html=True)
 
-# ── SIDEBAR / API KEY ─────────────────────────────────────────────────────────
+# SIDEBAR / API KEY
 
 with st.sidebar:
 st.markdown(”### DATABENTO API KEY”)
@@ -237,7 +237,7 @@ Back to WarRoom</a>
 </div>
 “””, unsafe_allow_html=True)
 
-# ── MAIN CONTENT ──────────────────────────────────────────────────────────────
+# MAIN CONTENT
 
 if not api_key:
 st.markdown(”””
@@ -276,7 +276,7 @@ elif df is not None and not df.empty:
             <div class="metric-label">MNQ LAST</div>
             <div class="metric-value" style="color:#00ff9f">{last['close']:,.2f}</div>
             <div style="font-size:9px;color:{'#00e676' if price_chg>=0 else '#ff3d57'};font-family:monospace">
-                {'▲' if price_chg>=0 else '▼'}{abs(price_pct):.2f}%
+                {'' if price_chg>=0 else ''}{abs(price_pct):.2f}%
             </div>
         </div>""", unsafe_allow_html=True)
     with col2:
