@@ -9,14 +9,14 @@ from plotly.subplots import make_subplots
 
 # PAGE CONFIG
 
-_title = “MNQ Live Chart”
-_icon = “”
-_layout = “wide”
+_title = "MNQ Live Chart"
+_icon = ""
+_layout = "wide"
 st.set_page_config(
 page_title=_title,
 page_icon=_icon,
 layout=_layout,
-initial_sidebar_state=“collapsed”
+initial_sidebar_state="collapsed"
 )
 
 # DARK THEME CSS
