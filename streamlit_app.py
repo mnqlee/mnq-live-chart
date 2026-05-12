@@ -6,9 +6,12 @@ import time
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-st.set_page_config(page_title=‘MNQ Live Chart’, layout=‘wide’)
+t = chr(77)+chr(78)+chr(81)+chr(32)+chr(76)+chr(105)+chr(118)+chr(101)+chr(32)+chr(67)+chr(104)+chr(97)+chr(114)+chr(116)
+w = chr(119)+chr(105)+chr(100)+chr(101)
+st.set_page_config(page_title=t, layout=w)
 
-st.markdown(’<style>body{background:#030303;color:#e0e0e0;font-family:monospace}.stApp{background:#030303}#MainMenu{visibility:hidden}footer{visibility:hidden}header{visibility:hidden}</style>’, unsafe_allow_html=True)
+css = chr(60)+chr(115)+chr(116)+chr(121)+chr(108)+chr(101)+chr(62)+chr(98)+chr(111)+chr(100)+chr(121)+chr(123)+chr(98)+chr(97)+chr(99)+chr(107)+chr(103)+chr(114)+chr(111)+chr(117)+chr(110)+chr(100)+chr(58)+chr(35)+chr(48)+chr(51)+chr(48)+chr(51)+chr(48)+chr(51)+chr(125)+chr(60)+chr(47)+chr(115)+chr(116)+chr(121)+chr(108)+chr(101)+chr(62)
+st.markdown(css, unsafe_allow_html=True)
 
 def calc_ema(s, p):
 return s.ewm(span=p, adjust=False).mean()
@@ -80,7 +83,7 @@ auto   = st.checkbox(‘Auto-refresh 5s’, value=True)
 st.markdown(’[Back to WarRoom](https://mnqlee.github.io/MNQ-Warroom-Claude-)’)
 
 if not api_key:
-st.info(‘Enter Databento API key in sidebar. Get one free at databento.com ($125 credits included).’)
+st.info(‘Enter Databento API key in sidebar. Get one free at databento.com’)
 else:
 df, err = fetch(api_key, tf)
 if err:
@@ -96,11 +99,11 @@ e21v = calc_ema(df[‘close’], 21).iloc[-1]
 
 ```
     c1,c2,c3,c4,c5 = st.columns(5)
-    c1.metric('MNQ', f"{last['close']:,.2f}", f"{pct:+.2f}%")
-    c2.metric('HIGH', f"{df['high'].max():,.2f}")
-    c3.metric('LOW',  f"{df['low'].min():,.2f}")
-    c4.metric('VWAP', f"{vw:,.2f}", 'ABOVE' if last['close']>vw else 'BELOW')
-    c5.metric('EMA', 'BULL' if e9v>e21v else 'BEAR')
+    c1.metric('MNQ', str(round(last['close'],2)), str(round(pct,2))+'%')
+    c2.metric('HIGH', str(round(df['high'].max(),2)))
+    c3.metric('LOW',  str(round(df['low'].min(),2)))
+    c4.metric('VWAP', str(round(vw,2)), 'ABOVE' if last['close']>vw else 'BELOW')
+    c5.metric('EMA',  'BULL' if e9v>e21v else 'BEAR')
 
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True,
                         vertical_spacing=0.02, row_heights=[0.8,0.2])
@@ -114,7 +117,6 @@ e21v = calc_ema(df[‘close’], 21).iloc[-1]
               for c,o in zip(df['close'],df['open'])]
     fig.add_trace(go.Bar(x=df.index,y=df['volume'],
         marker_color=colors,name='Vol',showlegend=False),row=2,col=1)
-
     if e9:  fig.add_trace(go.Scatter(x=df.index,y=calc_ema(df['close'],9),
         line=dict(color='#fbbf24',width=1),name='EMA9'),row=1,col=1)
     if e21: fig.add_trace(go.Scatter(x=df.index,y=calc_ema(df['close'],21),
@@ -125,25 +127,21 @@ e21v = calc_ema(df[‘close’], 21).iloc[-1]
         line=dict(color='#ff6b35',width=1),name='EMA200'),row=1,col=1)
     if vwap:fig.add_trace(go.Scatter(x=df.index,y=calc_vwap(df),
         line=dict(color='#ff3d57',width=1,dash='dot'),name='VWAP'),row=1,col=1)
-
     if orb_hi and orb_lo:
         try:
             oh,ol = float(orb_hi),float(orb_lo)
             fig.add_hrect(y0=ol,y1=oh,fillcolor='rgba(251,191,36,0.06)',
                 line_width=0,row=1,col=1)
             fig.add_hline(y=oh,line_color='#fbbf2488',line_dash='dash',
-                line_width=1,row=1,col=1,annotation_text='ORB H '+str(oh))
+                line_width=1,row=1,col=1)
             fig.add_hline(y=ol,line_color='#fbbf2488',line_dash='dash',
-                line_width=1,row=1,col=1,annotation_text='ORB L '+str(ol))
+                line_width=1,row=1,col=1)
         except Exception:
             pass
-
     if fvg:
         for f in detect_fvgs(df):
-            c = 'rgba(0,255,159,0.07)' if f['type']=='bull' else 'rgba(255,61,87,0.07)'
-            fig.add_hrect(y0=f['bot'],y1=f['top'],fillcolor=c,
-                line_width=0,row=1,col=1)
-
+            col = 'rgba(0,255,159,0.07)' if f['type']==chr(98)+chr(117)+chr(108)+chr(108) else 'rgba(255,61,87,0.07)'
+            fig.add_hrect(y0=f['bot'],y1=f['top'],fillcolor=col,line_width=0,row=1,col=1)
     fig.update_layout(
         paper_bgcolor='#030303',plot_bgcolor='#070707',
         font=dict(family='monospace',color='#e0e0e0',size=10),
@@ -152,8 +150,7 @@ e21v = calc_ema(df[‘close’], 21).iloc[-1]
     fig.update_xaxes(gridcolor='#111',showgrid=True,zeroline=False)
     fig.update_yaxes(gridcolor='#111',showgrid=True,zeroline=False,side='right')
     st.plotly_chart(fig,use_container_width=True,config={'displayModeBar':False})
-    st.caption('Last: '+df.index[-1].strftime('%H:%M:%S UTC')+' | NOT FINANCIAL ADVICE | USE STOPS')
-
+    st.caption('Last: '+df.index[-1].strftime('%H:%M:%S UTC')+' | NOT FINANCIAL ADVICE')
     if auto:
         time.sleep(5)
         st.rerun()
