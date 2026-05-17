@@ -48,7 +48,7 @@ def fetch(api_key, tf, n=200):
     schema, base, agg = TF.get(tf, ("ohlcv-1m", 60, 1))
     try:
         client = db.Historical(api_key)
-        end = datetime.now(timezone.utc) - timedelta(seconds=30)
+        end = datetime.now(timezone.utc) - timedelta(minutes=45)
         start = end - timedelta(seconds=base * agg * n)
         data = client.timeseries.get_range(
             dataset="GLBX.MDP3",
